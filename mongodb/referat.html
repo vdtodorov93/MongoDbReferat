@@ -16,8 +16,8 @@
 			<div class="list-group table-of-contents">
 				<a class="list-group-item" href="#id1">Какво е MongoDB?</a>
 				<a class="list-group-item" href="#id2">Документи</a>
-				<a class="list-group-item" href="#id3">Typography</a>
-				<a class="list-group-item" href="#id4">Tables</a>
+				<a class="list-group-item" href="#id3">Примерни документи</a>
+				<a class="list-group-item" href="#id4">Колекции</a>
 				<a class="list-group-item" href="#id5">Forms</a>
 			</div>
 		</div>
@@ -35,22 +35,38 @@
 			</hgroup>
 			<p>
 			Записите в MongoDB се наричат документи. Това е структура от данни, която се състои от двойки (поле, стойност). Тези документи са много подобни на JSON обектите. Стойностите на полетата могат да включват и други документи, масиви, масиви от документи.
+			Документите трябва да имат уникално поле <strong>_id</strong>, което е първичен ключ. MongoDB пази документите на диска в BSON формат, което е двоично представяне на JSON документ, въпреки че може да съдържа повече типове данни от JSON.
+			За Mongo има JavaScript shell, както и драйвери за различните езици, които са медиатор между BSON и специфичното за езика представяне на документа.
 			</p>
-		</article>
-		<article id="id3">
-			<hgroup>
-				<h2>LOREM 3</h2>
-			</hgroup>
 			<p>
-				Nulla facilisi. Nulla sit amet ultrices massa, vitae semper felis. Donec tincidunt, nunc sed cursus eleifend, augue magna accumsan dui, nec maximus turpis ex eu arcu. Fusce tincidunt pulvinar dolor ut pharetra. Morbi malesuada, tellus vel consequat vulputate, metus magna blandit libero, eu pulvinar tellus augue sit amet arcu. Integer tempor sodales mauris ac condimentum. Integer vehicula scelerisque magna vitae varius. Nulla facilisi. Vestibulum sit amet risus faucibus mi efficitur tempor. Vivamus in finibus ipsum. Fusce volutpat neque at urna gravida, sit amet dictum felis luctus. Duis in ipsum tempor, ultrices elit id, scelerisque odio.
+				<pre>
+{
+	_id: ObjectId("5099803df3f4948bd2f98391"),
+	name: { first: "Alan", last: "Turing" },
+	birth: new Date('Jun 23, 1912'),
+	death: new Date('Jun 07, 1954'),
+	contribs: [ "Turing machine", "Turing test", "Turingery" ],
+	views : NumberLong(1250000)
+ }
+				</pre>
+				Полетата от горният пример имат следните типове:
+				<ul>
+					<li>_id е от тип ObjectId.</li>
+					<li>name съдържа вграден документ, който е с 2 полета-първо и последно име</li>
+					<li>birth и death са от тип Date.</li>
+					<li>contribs е масив от стрингове.</li>
+					<li>views е число от тип NumberLong.</li>
+				</ul>
 			</p>
 		</article>
 		<article id="id4">
 			<hgroup>
-				<h2>LOREM 4</h2>
+				<h2>Колекции</h2>
 			</hgroup>
 			<p>
-				Duis ornare urna nisi, interdum faucibus mauris pharetra a. Fusce non vulputate neque, non hendrerit felis. Aenean a nibh tortor. Suspendisse potenti. Integer maximus massa sit amet enim vehicula, vel sagittis eros imperdiet. Suspendisse potenti. Nullam pretium pulvinar enim, in ornare dolor semper ut. Pellentesque dapibus orci sed lacus egestas, ac rutrum augue egestas. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus et elementum ligula. Donec volutpat bibendum metus, sit amet pretium ante 
+			MongoDB пази документите в колекции. Колекциите са аналогични на таблиците в релационните бази данни. За разлика от тях, обаче, колекцията не изисква предварително зададена схема. Също така няма значение дали документите в нея са с една и съща схема.
+			
+
 			</p>
 		</article>
 		<article id="id5">
@@ -61,6 +77,17 @@
 				Sed nec est quis sem elementum viverra ut non est. In nec sagittis risus, ac ultrices tortor. Aenean ornare at lectus dapibus auctor. Ut molestie vehicula risus at facilisis. Nullam felis diam, sodales tempus volutpat ac, euismod id mi. Nullam eu orci ut tortor rhoncus dapibus quis in ligula. Nulla commodo ullamcorper porta. Nulla condimentum lorem vitae felis cursus sagittis. Duis bibendum consectetur augue id pretium.
 
 				Pellentesque posuere, ipsum eget dictum cursus, diam sem lobortis dolor, sit amet fermentum purus risus vel augue. Nam pulvinar nisl nisl, eu elementum mi rutrum in. Vivamus malesuada odio libero, sed pulvinar sapien molestie vitae. Nam mollis facilisis ligula. In non mi consequat, venenatis ante malesuada, hendrerit odio. Sed accumsan eros ut ullamcorper pellentesque. Etiam malesuada ultricies orci quis auctor. Sed ornare quam in tempor sagittis. Nunc erat tellus, scelerisque quis nulla ornare, egestas lobortis odio. Suspendisse potenti. Duis dignissim sapien nec nulla congue, ac vulputate nisl varius. Aenean rutrum tellus eu dui fermentum venenatis. Sed commodo viverra placerat.
+			</p>
+		</article>
+
+
+		<article id="usedDocuments">
+			<hgroup>
+				<h2>Източници</h2>
+			</hgroup>
+			<p>
+				https://docs.mongodb.org/getting-started/java/introduction/
+				https://docs.mongodb.org/getting-started/java/client/
 			</p>
 		</article>
 	</div>
