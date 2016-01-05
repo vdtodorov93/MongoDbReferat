@@ -38,6 +38,31 @@
 			Документите трябва да имат уникално поле <strong>_id</strong>, което е първичен ключ. MongoDB пази документите на диска в BSON формат, което е двоично представяне на JSON документ, въпреки че може да съдържа повече типове данни от JSON.
 			За Mongo има JavaScript shell, както и драйвери за различните езици, които са медиатор между BSON и специфичното за езика представяне на документа.
 			</p>
+			<hgroup>
+				<h3>Ограничения на документите</h3>
+			</hgroup>
+			<p>
+				Максималният размер на BSON документ е 16 мегабайта. Това спомага за пестенето на рам паметта. За да се запазват документи над максималният размер, MongoDB предлага GridFS API.
+			</p>
+			<hgroup>
+				<h3>_id поле</h3>
+			</hgroup>
+			<p>
+				<ul>
+					<li>
+						По подразбиране, MongoDB създава уникален индекс по полето <strong>_id</strong> по време на създаване на колекцията.
+					</li>
+					<li>
+						Това поле винаги е първо в документа. Ако сървърът получи документ, чието _id не е първо, то той ще го премести на водеща позиция.
+					</li>
+					<li>
+						_id може да бъде всякаква стойност от BSON тип, с изключение на масив.
+					</li>
+					<li>
+						Обикновено за _id се използва ObjectId тип. Друг вариант е да се използва естествен първичен ключ, който разбира се трябва да е уникален. Това спестява място и нужда от още един индекс. Друг вариант е да се използва поредица от естествени числа, като се увеличават автоматично. Също така може да се използва и GUID, генериран от нашето приложение. 
+					</li>
+				</ul>
+			</p>
 			<p>
 				<pre>
 {
@@ -65,18 +90,119 @@
 			</hgroup>
 			<p>
 			MongoDB пази документите в колекции. Колекциите са аналогични на таблиците в релационните бази данни. За разлика от тях, обаче, колекцията не изисква предварително зададена схема. Също така няма значение дали документите в нея са с една и съща схема.
-			
-
 			</p>
 		</article>
 		<article id="id5">
 			<hgroup>
-				<h2>LOREM 5</h2>
+				<h2>Java driver</h2>
 			</hgroup>
 			<p>
-				Sed nec est quis sem elementum viverra ut non est. In nec sagittis risus, ac ultrices tortor. Aenean ornare at lectus dapibus auctor. Ut molestie vehicula risus at facilisis. Nullam felis diam, sodales tempus volutpat ac, euismod id mi. Nullam eu orci ut tortor rhoncus dapibus quis in ligula. Nulla commodo ullamcorper porta. Nulla condimentum lorem vitae felis cursus sagittis. Duis bibendum consectetur augue id pretium.
+				<hgroup>
+					<h3>Установяване на връзка с базата</h3>
+				</hgroup>
+				<p>
+				За да се установи връзка с базата, трябва като минимум да имаме името ѝ. Няма нужда тя да съществува, MongoDB може да я създаде за нас. Допълнително може да се зададе адрес и порт на който да се свържем. Ако не бъдат зададени се използват дефолтните. Следният пример показва как да се свържем към база <strong>mydb</strong> локално:
+				<pre>
+import com.mongodb.BasicDBObject;
+import com.mongodb.BulkWriteOperation;
+import com.mongodb.BulkWriteResult;
+import com.mongodb.Cursor;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.ParallelScanOptions;
+import com.mongodb.ServerAddress;
 
-				Pellentesque posuere, ipsum eget dictum cursus, diam sem lobortis dolor, sit amet fermentum purus risus vel augue. Nam pulvinar nisl nisl, eu elementum mi rutrum in. Vivamus malesuada odio libero, sed pulvinar sapien molestie vitae. Nam mollis facilisis ligula. In non mi consequat, venenatis ante malesuada, hendrerit odio. Sed accumsan eros ut ullamcorper pellentesque. Etiam malesuada ultricies orci quis auctor. Sed ornare quam in tempor sagittis. Nunc erat tellus, scelerisque quis nulla ornare, egestas lobortis odio. Suspendisse potenti. Duis dignissim sapien nec nulla congue, ac vulputate nisl varius. Aenean rutrum tellus eu dui fermentum venenatis. Sed commodo viverra placerat.
+import java.util.List;
+import java.util.Set;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
+// if it's a member of a replica set:
+MongoClient mongoClient = new MongoClient();
+// or
+MongoClient mongoClient = new MongoClient( "localhost" );
+// or
+MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+// or, to connect to a replica set, with auto-discovery of the primary, supply a seed list of members
+MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
+                                      new ServerAddress("localhost", 27018),
+                                      new ServerAddress("localhost", 27019)));
+
+DB db = mongoClient.getDB( "mydb" );
+				</pre>
+				В този момент, обектът db ще бъде нашата връзка с MongoDB сървър за дадената база. С него можем да правим някои интересни операции.
+				Mongoclient класът е създаден да бъде безопасен в конкурентна среда с повече нишки, които да го споделят. По принцип се създава само 1 инстанция за дадена база и се използва из цялото приложение. </br>
+				<hgroup>
+					<h3>Автентикация</h3>
+				</hgroup>
+				Можем да използваме и автентикация по следният начин.
+				<pre>
+MongoCredential credential = MongoCredential.createCredential(userName, database, password);
+MongoClient mongoClient = new MongoClient(new ServerAddress(), Arrays.asList(credential));
+				</pre>
+				<hgroup>
+					<h3>Взимане на колекция</h3>
+				</hgroup>
+				Можем да вземем дадена колекция по следният начин:
+				<pre>
+DBCollection coll = db.getCollection("testCollection");
+				</pre>
+				След като веднъж сме получили обектът за колекция, може да добавяме данни или да правим заявки.
+				<hgroup>
+					<h3>Задаване на политика за записване</h3>
+				</hgroup>
+				По подразбиране тя е WriteConcern.ACKNOWLEDGED, но можем да я сменим с журнална (както в примера), както и още много други
+				<pre>
+mongoClient.setWriteConcern(WriteConcern.JOURNALED);
+				</pre>
+				<hgroup>
+					<h3>Добавяне на документ</h3>
+				</hgroup>
+				След като вече имаме обектът за колекция, може да добавим документи в нея. Например ако имаме малък документ изглеждащ така в JSON формат:
+				<pre>
+{
+   "name" : "MongoDB",
+   "type" : "database",
+   "count" : 1,
+   "info" : {
+               x : 203,
+               y : 102
+             }
+}
+				</pre>
+				В случаят има вграден документ в него. За да го имплементираме, може да използваме BasicDBObject за да създадем документа, както и вътрешният такъв. След това го добавяме с операцията <strong>insert()</strong> 
+				<pre>
+BasicDBObject doc = new BasicDBObject("name", "MongoDB")
+        .append("type", "database")
+        .append("count", 1)
+        .append("info", new BasicDBObject("x", 203).append("y", 102));
+coll.insert(doc);
+				</pre>
+				<hgroup>
+					<h3>Намиране на документ в колекция с findOne()</h3>
+				</hgroup>
+				За да покажем че документът, който добавихме на предишната стъпка е там, може да използваме просто <strong>findOne()</strong> за да вземем първият документ от колекцията. Този метод връща само един документ, за разлика от курсорът който връща <strong>find()</strong>. 
+
+				<pre>
+DBObject myDoc = coll.findOne();
+System.out.println(myDoc);
+				</pre>
+				получаваме
+				<pre>
+{ "_id" : "49902cde5162504500b45c2c" ,
+  "name" : "MongoDB" ,
+  "type" : "database" ,
+  "count" : 1 ,
+  "info" : { "x" : 203 , "y" : 102}}
+				</pre>
+				<hgroup>
+					<h3>Добавяне на повече документи</h3>
+				</hgroup>
+				</p>
 			</p>
 		</article>
 
