@@ -3,6 +3,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<title>MongoDB</title>
 	<link rel="stylesheet" href="./css/bootstrap.css" media="screen">
+	<link rel="stylesheet" href="./css/custom.css" media="screen">
 </head>
 <body>
 	<div class="container">
@@ -14,14 +15,15 @@
 					 за уеб приложения</h1>
 		<div class="col-lg-3 col-md-3 col-sm-4">
 			<div class="list-group table-of-contents">
-				<a class="list-group-item" href="#id1">Какво е MongoDB?</a>
-				<a class="list-group-item" href="#id2">Документи</a>
+				<a class="list-group-item" href="#introduction">Какво е MongoDB?</a>
+				<a class="list-group-item" href="#documents">Документи</a>
 				<a class="list-group-item" href="#id3">Примерни документи</a>
-				<a class="list-group-item" href="#id4">Колекции</a>
-				<a class="list-group-item" href="#id5">Forms</a>
+				<a class="list-group-item" href="#collections">Колекции</a>
+				<a class="list-group-item" href="#java-driver">Java driver</a>
+				<a class="list-group-item" href="#about">За автора</a>
 			</div>
 		</div>
-		<article id="id1">
+		<article id="introduction">
 			<hgroup>
 				<h2>Какво е MongoDB?</h2>
 			</hgroup>
@@ -29,7 +31,7 @@
 			MongoDB е документна база данни с отворен код, която предлага висока производителност, надеждност и автоматично скалиране. MongoDB премахва нуждата от ORM, като така улеснява работата по проектите.
 			</p>
 		</article>
-		<article id="id2">
+		<article id="documents">
 			<hgroup>
 				<h2>Документи</h2>
 			</hgroup>
@@ -66,12 +68,12 @@
 			<p>
 				<pre>
 {
-	_id: ObjectId("5099803df3f4948bd2f98391"),
-	name: { first: "Alan", last: "Turing" },
-	birth: new Date('Jun 23, 1912'),
-	death: new Date('Jun 07, 1954'),
-	contribs: [ "Turing machine", "Turing test", "Turingery" ],
-	views : NumberLong(1250000)
+	<span class="key-word blue">_id</span>: ObjectId(<span class="key-word green">"5099803df3f4948bd2f98391"</span>),
+	<span class="key-word blue">name</span>: { first: <span class="key-word green">"Alan"</span>, last: <span class="key-word green">"Turing"</span> },
+	<span class="key-word blue">birth</span>: new Date(<span class="key-word green">'Jun 23, 1912'</span>),
+	<span class="key-word blue">death</span>: new Date(<span class="key-word green">'Jun 07, 1954'</span>),
+	<span class="key-word blue">contribs</span>: [ <span class="key-word green">"Turing machine"</span>, <span class="key-word green">"Turing test"</span>, <span class="key-word green">"Turingery"</span> ],
+	<span class="key-word blue">views</span> : NumberLong(1250000)
  }
 				</pre>
 				Полетата от горният пример имат следните типове:
@@ -84,7 +86,7 @@
 				</ul>
 			</p>
 		</article>
-		<article id="id4">
+		<article id="collections">
 			<hgroup>
 				<h2>Колекции</h2>
 			</hgroup>
@@ -92,7 +94,7 @@
 			MongoDB пази документите в колекции. Колекциите са аналогични на таблиците в релационните бази данни. За разлика от тях, обаче, колекцията не изисква предварително зададена схема. Също така няма значение дали документите в нея са с една и съща схема.
 			</p>
 		</article>
-		<article id="id5">
+		<article id="java-driver">
 			<hgroup>
 				<h2>Java driver</h2>
 			</hgroup>
@@ -103,36 +105,36 @@
 				<p>
 				За да се установи връзка с базата, трябва като минимум да имаме името ѝ. Няма нужда тя да съществува, MongoDB може да я създаде за нас. Допълнително може да се зададе адрес и порт на който да се свържем. Ако не бъдат зададени се използват дефолтните. Следният пример показва как да се свържем към база <strong>mydb</strong> локално:
 				<pre>
-import com.mongodb.BasicDBObject;
-import com.mongodb.BulkWriteOperation;
-import com.mongodb.BulkWriteResult;
-import com.mongodb.Cursor;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.ParallelScanOptions;
-import com.mongodb.ServerAddress;
+<span class="key-word dark-blue">import</span> com.mongodb.BasicDBObject;
+<span class="key-word dark-blue">import</span> com.mongodb.BulkWriteOperation;
+<span class="key-word dark-blue">import</span> com.mongodb.BulkWriteResult;
+<span class="key-word dark-blue">import</span> com.mongodb.Cursor;
+<span class="key-word dark-blue">import</span> com.mongodb.DB;
+<span class="key-word dark-blue">import</span> com.mongodb.DBCollection;
+<span class="key-word dark-blue">import</span> com.mongodb.DBCursor;
+<span class="key-word dark-blue">import</span> com.mongodb.DBObject;
+<span class="key-word dark-blue">import</span> com.mongodb.MongoClient;
+<span class="key-word dark-blue">import</span> com.mongodb.ParallelScanOptions;
+<span class="key-word dark-blue">import</span> com.mongodb.ServerAddress;
 
-import java.util.List;
-import java.util.Set;
+<span class="key-word dark-blue">import</span> java.util.List;
+<span class="key-word dark-blue">import</span> java.util.Set;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+<span class="key-word dark-blue">import static</span> java.util.concurrent.TimeUnit.SECONDS;
 
 // To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
 // if it's a member of a replica set:
-MongoClient mongoClient = new MongoClient();
+MongoClient mongoClient = <span class="key-word dark-blue">new</span> MongoClient();
 // or
-MongoClient mongoClient = new MongoClient( "localhost" );
+MongoClient mongoClient = <span class="key-word dark-blue">new</span> MongoClient( <span class="key-word green">"localhost"</span> );
 // or
-MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+MongoClient mongoClient = <span class="key-word dark-blue">new</span> MongoClient( <span class="key-word green">"localhost"</span> , 27017 );
 // or, to connect to a replica set, with auto-discovery of the primary, supply a seed list of members
-MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
-                                      new ServerAddress("localhost", 27018),
-                                      new ServerAddress("localhost", 27019)));
+MongoClient mongoClient = <span class="key-word dark-blue">new</span> MongoClient(Arrays.asList(<span class="key-word dark-blue">new</span> ServerAddress("localhost", 27017),
+                                      <span class="key-word dark-blue">new</span> ServerAddress(<span class="key-word green">"localhost"</span>, 27018),
+                                      <span class="key-word dark-blue">new</span> ServerAddress(<span class="key-word green">"localhost"</span>, 27019)));
 
-DB db = mongoClient.getDB( "mydb" );
+DB db = mongoClient.getDB( <span class="key-word green">"mydb"</span> );
 				</pre>
 				В този момент, обектът db ще бъде нашата връзка с MongoDB сървър за дадената база. С него можем да правим някои интересни операции.
 				Mongoclient класът е създаден да бъде безопасен в конкурентна среда с повече нишки, които да го споделят. По принцип се създава само 1 инстанция за дадена база и се използва из цялото приложение. </br>
@@ -149,7 +151,7 @@ MongoClient mongoClient = new MongoClient(new ServerAddress(), Arrays.asList(cre
 				</hgroup>
 				Можем да вземем дадена колекция по следният начин:
 				<pre>
-DBCollection coll = db.getCollection("testCollection");
+DBCollection coll = db.getCollection(<span class="key-word green">"testCollection"</span>);
 				</pre>
 				След като веднъж сме получили обектът за колекция, може да добавяме данни или да правим заявки.
 				<hgroup>
@@ -165,21 +167,21 @@ mongoClient.setWriteConcern(WriteConcern.JOURNALED);
 				След като вече имаме обектът за колекция, може да добавим документи в нея. Например ако имаме малък документ изглеждащ така в JSON формат:
 				<pre>
 {
-   "name" : "MongoDB",
-   "type" : "database",
-   "count" : 1,
-   "info" : {
-               x : 203,
-               y : 102
+   <span class="key-word blue">"name"</span> : <span class="key-word green">"MongoDB"</span>,
+   <span class="key-word blue">"type"</span> : <span class="key-word green">"database"</span>,
+   <span class="key-word blue">"count"</span> : 1,
+   <span class="key-word blue">"info"</span> : {
+               <span class="key-word blue">"x"</span> : 203,
+               <span class="key-word blue">"y"</span> : 102
              }
 }
 				</pre>
 				В случаят има вграден документ в него. За да го имплементираме, може да използваме BasicDBObject за да създадем документа, както и вътрешният такъв. След това го добавяме с операцията <strong>insert()</strong> 
 				<pre>
-BasicDBObject doc = new BasicDBObject("name", "MongoDB")
-        .append("type", "database")
-        .append("count", 1)
-        .append("info", new BasicDBObject("x", 203).append("y", 102));
+BasicDBObject doc = new BasicDBObject(<span class="key-word green">"name"</span>, <span class="key-word green">"MongoDB"</span>)
+        .append(<span class="key-word green">"type"</span>, <span class="key-word green">"database"</span>)
+        .append(<span class="key-word green">"count"</span>, 1)
+        .append(<span class="key-word green">"info"</span>, new BasicDBObject(<span class="key-word green">"x"</span>, 203).append(<span class="key-word green">"y"</span>, 102));
 coll.insert(doc);
 				</pre>
 				<hgroup>
@@ -193,27 +195,80 @@ System.out.println(myDoc);
 				</pre>
 				получаваме
 				<pre>
-{ "_id" : "49902cde5162504500b45c2c" ,
-  "name" : "MongoDB" ,
-  "type" : "database" ,
-  "count" : 1 ,
-  "info" : { "x" : 203 , "y" : 102}}
+{ 
+  <span class="key-word dark-blue">"_id"</span> : <span class="key-word green">"49902cde5162504500b45c2c"</span> ,
+  <span class="key-word dark-blue">"name"</span> : <span class="key-word green">"MongoDB"</span> ,
+  <span class="key-word dark-blue">"type"</span> : <span class="key-word green">"database"</span> ,
+  <span class="key-word dark-blue">"count"</span> : 1 ,
+  <span class="key-word dark-blue">"info"</span> : { <span class="key-word dark-blue">"x"</span> : 203 , <span class="key-word dark-blue">"y"</span> : 102}
+}
 				</pre>
 				<hgroup>
-					<h3>Добавяне на повече документи</h3>
+					<h3>Получаване на множество от документи със заявка</h3>
 				</hgroup>
+				Можем да използваме заявка за да вземем множество документи от нашата колекция. На пример, ако искаме всички документи с поле "i" > 50, можем да използваме следната заявка:
+				<pre>
+// find all where i > 50
+query = <span class="key-word dark-blue">new</span> BasicDBObject(<span class="key-word green">"i"</span>, new BasicDBObject(<span class="key-word green">"$gt"</span>, 50));
+
+cursor = coll.find(query);
+<span class="key-word dark-blue">try</span> {
+    <span class="key-word dark-blue">while</span> (cursor.hasNext()) {
+        System.out.println(cursor.next());
+    }
+} <span class="key-word dark-blue">finally</span> {
+    cursor.close();
+}
+				</pre>
+				Можем да направим малко по-интересна заявка, която да върне документите със стойност за "i" 20 &lt i &lt= 30.
+				<pre>
+query = <span class="key-word dark-blue">new</span> BasicDBObject(<span class="key-word green">"i"</span>, <span class="key-word dark-blue">new</span> BasicDBObject(<span class="key-word green">"$gt"</span>, 20).append(<span class="key-word green">"$lte"</span>, 30));
+cursor = coll.find(query);
+
+<span class="key-word dark-blue">try</span> {
+    <span class="key-word dark-blue">while</span> (cursor.hasNext()) {
+        System.out.println(cursor.next());
+    }
+} <span class="key-word dark-blue">finally</span> {
+    cursor.close();
+}
+				</pre>
+				<hgroup>
+					<h3>Лимитиране времето на заявка</h3>
+				</hgroup>
+				От MongoDb 2.6 нагоре има възможност за лимитиране на отделните заявки.
+				<pre>
+coll.find().maxTime(1, SECONDS).count();
+				</pre>
+				В този пример, максималното време е зададено да бъде секудна и заявката ще бъде прекратена ако то бъде пресрочено. Тъй като ме съмнява някой да чете тука, ще си позволя да сложа един виц. Българско порно с медицински сестри - по време на секса, на всеки пет минути влиза някаква бабичка "само да пита нещо". Ако случайно сте го прочели ми пишете на мейла, ще съм поласкан че сте стигнали до тук в скучното четиво.
 				</p>
 			</p>
 		</article>
 
+		<article id="about">
+			<hgroup>
+				<h2>За автора</h2>
+			</hgroup>
+			<p>
+				<ul class="ul-nobullet">
+					<li><strong>Тема: </strong> MongoDB за уеб приложения</li>
+					<li><strong>Изготвил:</strong> Васил Тодоров</li>
+					<li><strong>ФН:</strong> 80857</li>
+					<li><strong>Специалност:</strong> Компютърни науки</li>
+					<li><strong>Курс:</strong> 4</li>
+					<li><strong>С кво се занимава тоя?:</strong> Ми хич не го бива във веба</li>
+				</ul>
+			</p>
+		</article>
 
 		<article id="usedDocuments">
 			<hgroup>
 				<h2>Източници</h2>
 			</hgroup>
 			<p>
-				https://docs.mongodb.org/getting-started/java/introduction/
-				https://docs.mongodb.org/getting-started/java/client/
+				https://docs.mongodb.org/getting-started/java/introduction/</br>
+				https://docs.mongodb.org/getting-started/java/client/</br>
+				http://mongodb.github.io/mongo-java-driver/2.13/getting-started/quick-tour/</br>
 			</p>
 		</article>
 	</div>
